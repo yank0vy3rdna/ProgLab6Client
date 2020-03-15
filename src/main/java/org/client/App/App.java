@@ -18,7 +18,7 @@ public class App {
     public void start() throws IOException {
         while(flag) {
             try {
-                Socket socket = new Socket("localhost", 8888);
+                Socket socket = new Socket("localhost", 9000);
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
                 ui.print(dispatcher.dispatch(ui.getNextCommand(br), socket, this));
