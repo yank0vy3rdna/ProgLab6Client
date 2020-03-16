@@ -22,6 +22,8 @@ public class App {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
                 ui.print(dispatcher.dispatch(ui.getNextCommand(br), socket, this));
+                socket.close();
+
             }catch (ConnectException ex){
                 ui.print("Server disconnect");
                 break;

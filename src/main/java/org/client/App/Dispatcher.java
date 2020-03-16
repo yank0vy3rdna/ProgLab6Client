@@ -18,13 +18,13 @@ public class Dispatcher {
         try {
             oos.write(sizeBytes);
             oos.write(stringBytes);
-//            oos.writeUTF(clientCommand);
             oos.flush();
+            while(ois.available()==0);
+            return ois.readUTF();
         }catch (NullPointerException ex){
             oos.writeUTF("exit");
             app.stopWork();
             return "Client off work";
         }
-        return "";
     }
 }
