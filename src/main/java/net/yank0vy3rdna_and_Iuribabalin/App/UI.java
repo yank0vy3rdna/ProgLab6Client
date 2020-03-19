@@ -1,4 +1,4 @@
-package org.client.App;
+package net.yank0vy3rdna_and_Iuribabalin.App;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,6 +26,13 @@ public class UI {
             System.out.print(">> ");
         }
         return br.readLine();
+    }
+
+    public String readField(String fieldName){
+        if (prints) {
+            System.out.print("Введите значение поля " + fieldName + ": ");
+        }
+        return in.nextLine().toUpperCase();
     }
 
     public void print(String string){

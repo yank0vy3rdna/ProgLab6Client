@@ -1,4 +1,6 @@
-package org.client.App;
+package net.yank0vy3rdna_and_Iuribabalin.App;
+
+import net.yank0vy3rdna_and_Iuribabalin.Dragon.DragonReader;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -22,6 +24,7 @@ public class App {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
                 ui.print(dispatcher.dispatch(ui.getNextCommand(br), socket, this));
+
                 socket.close();
 
             }catch (ConnectException ex){
