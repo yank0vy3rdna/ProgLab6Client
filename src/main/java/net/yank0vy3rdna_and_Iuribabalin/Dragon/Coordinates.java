@@ -3,6 +3,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Coordinates implements Serializable {
+    static final long serialVersionUID = -7588980448693010399L;
     private Double x; //Поле не может быть null
     private float y;
 

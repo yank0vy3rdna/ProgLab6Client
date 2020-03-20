@@ -53,10 +53,6 @@ public class Dispatcher {
 
                 oos.write(sizeBytes);
                 oos.write(stringBytes);
-
-                sizeBytes = ByteBuffer.allocate(4).putInt(dataBytes.length).array();
-
-                oos.write(sizeBytes);
                 oos.write(dataBytes);
                 oos.flush();
 

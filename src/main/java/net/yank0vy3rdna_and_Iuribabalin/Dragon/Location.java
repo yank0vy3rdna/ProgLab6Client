@@ -3,6 +3,7 @@ package net.yank0vy3rdna_and_Iuribabalin.Dragon;
 import java.io.Serializable;
 
 public class Location implements Serializable {
+    static final long serialVersionUID = -7588980448693010399L;
     private double x;
     private float y;
 
