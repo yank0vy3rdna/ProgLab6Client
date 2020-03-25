@@ -1,7 +1,9 @@
 package net.yank0vy3rdna_and_Iuribabalin.App;
 
+import net.yank0vy3rdna_and_Iuribabalin.Command.CommandSerializable;
 import net.yank0vy3rdna_and_Iuribabalin.Dragon.DragonReader;
 import net.yank0vy3rdna_and_Iuribabalin.Dragon.DragonSerializable;
+import net.yank0vy3rdna_and_Iuribabalin.FileWork.FileSerializable;
 import net.yank0vy3rdna_and_Iuribabalin.MakeObject.MakeObject;
 
 import java.io.ByteArrayOutputStream;
@@ -17,6 +19,8 @@ public class Dispatcher {
     HashMap<String, MakeObject> commands;
     public DragonReader reader;
     public DragonSerializable serializable;
+    private CommandSerializable serialCommand = new CommandSerializable();
+    public FileSerializable fileSerializable = new FileSerializable();
 
     public Dispatcher(HashMap<String, MakeObject> commands, DragonReader reder, DragonSerializable serializable){
         this.reader = reder;
@@ -31,7 +35,7 @@ public class Dispatcher {
         DataInputStream ois = new DataInputStream(socket.getInputStream());
 
         try {
-            byte[] stringBytes = clientCommand.getBytes(StandardCharsets.UTF_8);
+            byte[] stringBytes = serialCommand.serializable(clientCommand);
             byte[] sizeBytes = ByteBuffer.allocate(4).putInt(stringBytes.length).array();
             byte[] dataBytes = new byte[0]; // Этот массив байт ты заюзаешь, когда пользователь введет команду add, update или execute_script
 
