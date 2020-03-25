@@ -28,6 +28,7 @@ public class App {
                 socket.close();
 
             }catch (ConnectException ex){
+
                 ui.print("Server disconnect");
                 break;
             }

@@ -1,31 +1,31 @@
 package net.yank0vy3rdna_and_Iuribabalin.App;
 
-import net.yank0vy3rdna_and_Iuribabalin.Command.CommandSerializable;
+import net.yank0vy3rdna_and_Iuribabalin.Commands.CommandSerializable;
+import net.yank0vy3rdna_and_Iuribabalin.Commands.OutputCommand;
 import net.yank0vy3rdna_and_Iuribabalin.Dragon.DragonReader;
-import net.yank0vy3rdna_and_Iuribabalin.Dragon.DragonSerializable;
-import net.yank0vy3rdna_and_Iuribabalin.FileWork.FileSerializable;
-import net.yank0vy3rdna_and_Iuribabalin.MakeObject.MakeObject;
+import net.yank0vy3rdna_and_Iuribabalin.FileWork.FileReader;
+import net.yank0vy3rdna_and_Iuribabalin.MakeObject.ObjectExecute;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class Dispatcher {
-    HashMap<String, MakeObject> commands;
+    HashMap<String, ObjectExecute> commands;
     public DragonReader reader;
-    public DragonSerializable serializable;
-    private CommandSerializable serialCommand = new CommandSerializable();
-    public FileSerializable fileSerializable = new FileSerializable();
+    public CommandSerializable serialCommand;
+    public FileReader fileReader;
+    public OutputCommand out;
 
-    public Dispatcher(HashMap<String, MakeObject> commands, DragonReader reder, DragonSerializable serializable){
+
+    public Dispatcher(HashMap<String, ObjectExecute> commands, DragonReader reder, CommandSerializable serialCommand,
+                      FileReader fileReader, OutputCommand out){
         this.reader = reder;
         this.commands = commands;
-        this.serializable = serializable;
+        this.serialCommand = serialCommand;
+        this.out = out;
+        this.fileReader = fileReader;
     }
 
     public String dispatch(String clientCommand, Socket socket, App app) throws IOException {
@@ -34,46 +34,51 @@ public class Dispatcher {
         DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
         DataInputStream ois = new DataInputStream(socket.getInputStream());
 
+        out.setCommand(clientCommand);
+
         try {
-            byte[] stringBytes = serialCommand.serializable(clientCommand);
-            byte[] sizeBytes = ByteBuffer.allocate(4).putInt(stringBytes.length).array();
-            byte[] dataBytes = new byte[0]; // Этот массив байт ты заюзаешь, когда пользователь введет команду add, update или execute_script
+            byte[] outBytes;
+            byte[] sizeBytes;
 
+            if (commands.get(clientCommand.split(" ")[0].toLowerCase()) != null) {
 
-            if(clientCommand.equals("exit")){
+                ObjectExecute doComm =  commands.get(clientCommand.split(" ")[0]);
+                doComm.exec(clientCommand,this);
+
+                outBytes = serialCommand.serializable(out);
+                sizeBytes = ByteBuffer.allocate(4).putInt(outBytes.length).array();
 
                 oos.write(sizeBytes);
-                oos.write(stringBytes);
+                oos.write(outBytes);
+                oos.flush();
+
+            }else if(clientCommand.equals("exit")){
+                outBytes = serialCommand.serializable(out);
+                sizeBytes = ByteBuffer.allocate(4).putInt(outBytes.length).array();
+
+                oos.write(sizeBytes);
+                oos.write(outBytes);
                 oos.flush();
 
                 app.stopWork();
 
-                return "Client off work";
+                return ois.readUTF();
             }
-            if(commands.get(clientCommand.split(" ")[0].toLowerCase()) != null){
-
-                MakeObject command = commands.get(clientCommand.split(" ")[0]);
-                dataBytes = command.exec(clientCommand, this);
+            else{
+                outBytes = serialCommand.serializable(out);
+                sizeBytes = ByteBuffer.allocate(4).putInt(outBytes.length).array();
 
                 oos.write(sizeBytes);
-                oos.write(stringBytes);
-                oos.write(dataBytes);
-                oos.flush();
-
-            }else{
-                oos.write(sizeBytes);
-                oos.write(stringBytes);
+                oos.write(outBytes);
                 oos.flush();
             }
-
-            return ois.readUTF();
-
         }catch (NullPointerException ex){
-
-            oos.writeUTF("exit");
             app.stopWork();
 
             return "Client off work";
         }
+
+
+        return ois.readUTF();
     }
 }
