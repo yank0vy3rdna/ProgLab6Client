@@ -52,6 +52,8 @@ public class Dispatcher {
 
                 out.setExecute_commands(check.check(out.getExecute_commands(), this));
 
+                System.out.println(out.getExecute_commands());
+
                 outBytes = serialCommand.serializable(out);
                 sizeBytes = ByteBuffer.allocate(4).putInt(outBytes.length).array();
 
