@@ -31,6 +31,8 @@ public class App {
 
                 ui.print("Server disconnect");
                 break;
+            }catch (EOFException ex){
+                break;
             }
 
         }
