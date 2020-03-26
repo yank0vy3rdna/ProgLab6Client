@@ -22,8 +22,12 @@ public class App {
             try {
                 Socket socket = new Socket("localhost", 9000);
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-                ui.print(dispatcher.dispatch(ui.getNextCommand(br), socket, this));
+                String answ = dispatcher.dispatch(ui.getNextCommand(br), socket, this);
+                if (answ.equals(">>")){
+                    socket.close();
+                    continue;
+                }
+                ui.print(answ);
 
                 socket.close();
 
@@ -31,8 +35,8 @@ public class App {
 
                 ui.print("Server disconnect");
                 break;
-            }catch (EOFException ex){
-                break;
+            }catch (EOFException ignored){
+
             }
 
         }
