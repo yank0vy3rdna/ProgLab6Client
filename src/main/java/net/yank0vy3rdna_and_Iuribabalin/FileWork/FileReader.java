@@ -4,7 +4,7 @@ import java.io.*;
 
 public class FileReader {
 
-    public String serializable(String filename) throws IOException {
+    public String inputCommandFile(String filename) throws IOException {
         BufferedReader reader = new BufferedReader((new InputStreamReader(new FileInputStream(filename))));
         char[] charBuffer = new char[8 * 1024];
         StringBuilder builder = new StringBuilder();

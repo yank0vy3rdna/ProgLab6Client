@@ -1,5 +1,6 @@
 package net.yank0vy3rdna_and_Iuribabalin.App;
 
+import net.yank0vy3rdna_and_Iuribabalin.Commands.CheckExecuts;
 import net.yank0vy3rdna_and_Iuribabalin.Commands.CommandSerializable;
 import net.yank0vy3rdna_and_Iuribabalin.Commands.OutputCommand;
 import net.yank0vy3rdna_and_Iuribabalin.Dragon.DragonReader;
@@ -17,15 +18,17 @@ public class Dispatcher {
     public CommandSerializable serialCommand;
     public FileReader fileReader;
     public OutputCommand out;
+    public CheckExecuts check;
 
 
     public Dispatcher(HashMap<String, ObjectExecute> commands, DragonReader reder, CommandSerializable serialCommand,
-                      FileReader fileReader, OutputCommand out){
+                      FileReader fileReader, OutputCommand out, CheckExecuts check){
         this.reader = reder;
         this.commands = commands;
         this.serialCommand = serialCommand;
         this.out = out;
         this.fileReader = fileReader;
+        this.check = check;
     }
 
     public String dispatch(String clientCommand, Socket socket, App app) throws IOException {
@@ -46,6 +49,8 @@ public class Dispatcher {
 
                 ObjectExecute doComm =  commands.get(clientCommand.split(" ")[0]);
                 doComm.exec(clientCommand,this);
+
+                out.setExecute_commands(check.check(out.getExecute_commands(), this));
 
                 outBytes = serialCommand.serializable(out);
                 sizeBytes = ByteBuffer.allocate(4).putInt(outBytes.length).array();
@@ -80,7 +85,15 @@ public class Dispatcher {
             return "Client off work";
         }
 
+        String asw = ois.readUTF();
 
-        return ois.readUTF();
+        for(String s: asw.split("\n")){
+            if(s.trim().equals("Работа в консоли закончена")){
+                app.stopWork();
+                return asw;
+            }
+        }
+
+        return asw;
     }
 }

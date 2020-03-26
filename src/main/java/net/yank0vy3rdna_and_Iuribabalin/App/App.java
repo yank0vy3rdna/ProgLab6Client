@@ -1,7 +1,5 @@
 package net.yank0vy3rdna_and_Iuribabalin.App;
 
-import net.yank0vy3rdna_and_Iuribabalin.Dragon.DragonReader;
-
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
@@ -37,7 +35,7 @@ public class App {
                 ui.print("Server disconnect");
                 break;
             }catch (EOFException ignored){
-
+                System.out.println("-");
             }
 
         }
