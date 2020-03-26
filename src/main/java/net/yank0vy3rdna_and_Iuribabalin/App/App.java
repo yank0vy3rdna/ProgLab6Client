@@ -20,9 +20,10 @@ public class App {
     public void start() throws IOException {
         while(flag) {
             try {
-                Socket socket = new Socket("localhost", 9000);
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                String answ = dispatcher.dispatch(ui.getNextCommand(br), socket, this);
+                String command = ui.getNextCommand(br);
+                Socket socket = new Socket("localhost", 9000);
+                String answ = dispatcher.dispatch(command, socket, this);
                 if (answ.equals(">>")){
                     socket.close();
                     continue;
