@@ -33,9 +33,11 @@ public class Dispatcher {
 
         DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
         DataInputStream ois = new DataInputStream(socket.getInputStream());
-
-        out.setCommand(clientCommand);
-
+        String[] splitted = clientCommand.split(" ");
+        out.setCommand(splitted[0]);
+        String[] args = new String[splitted.length-1];
+        System.arraycopy(splitted,1,args,0,splitted.length-1);
+        out.setArgs(args);
         try {
             byte[] outBytes;
             byte[] sizeBytes;
