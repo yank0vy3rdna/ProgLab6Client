@@ -2,7 +2,6 @@ package net.yank0vy3rdna_and_Iuribabalin.App;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class UI {

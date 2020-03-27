@@ -20,7 +20,7 @@ public class App {
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 String command = ui.getNextCommand(br);
-                Socket socket = new Socket("localhost", 9000);
+                Socket socket = new Socket("127.0.0.1", 2323);
                 String answ = dispatcher.dispatch(command, socket, this);
                 if (answ.equals(">>")){
                     socket.close();
@@ -31,9 +31,7 @@ public class App {
                 socket.close();
 
             }catch (ConnectException ex){
-
                 ui.print("Server disconnect");
-                break;
             }catch (EOFException ignored){
                 System.out.println("-");
             }
