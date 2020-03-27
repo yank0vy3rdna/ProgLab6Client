@@ -5,6 +5,9 @@ import net.yank0vy3rdna_and_Iuribabalin.App.Dispatcher;
 import java.io.IOException;
 
 public class CheckExecuts {
+
+
+
     public String check(String execute, Dispatcher dispatcher) throws IOException {
         StringBuilder builder = new StringBuilder();
         if(execute!= null) {
