@@ -17,10 +17,14 @@ public class App {
 
     public void start() throws IOException {
         while(flag) {
+            Socket socket = new Socket();
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 String command = ui.getNextCommand(br);
-                Socket socket = new Socket("127.0.0.1", 2323);
+                if(command == null){
+                    break;
+                }
+                socket = new Socket("127.0.0.1", 2323);
                 String answ = dispatcher.dispatch(command, socket, this);
                 if (answ.equals(">>")){
                     socket.close();
@@ -31,9 +35,11 @@ public class App {
                 socket.close();
 
             }catch (ConnectException ex){
+//                ex.printStackTrace();
                 ui.print("Server disconnect");
             }catch (EOFException ignored){
             }catch (NullPointerException ex){
+                socket.close();
                 flag = false;
                 break;
             }
