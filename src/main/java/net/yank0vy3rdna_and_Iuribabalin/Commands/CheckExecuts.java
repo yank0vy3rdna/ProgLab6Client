@@ -10,30 +10,43 @@ import java.util.List;
 public class CheckExecuts {
 
     static List<String> files = new ArrayList<>();
+    static List<String> iterFiles = new ArrayList<>();
 
 
     public String check(String execute, Dispatcher dispatcher) throws IOException {
         StringBuilder builder = new StringBuilder();
+        int iter = 0;
         if(execute!= null) {
-            for (String el : execute.split("\n")) {
-                String[] element = el.split(" ");
-                if (element[0].equals("execute_script")) {
-                    if(checkName(element[1]))
+            while(true) {
+                List<String> omg = new ArrayList<>();
+                for (String str : execute.split("\n")) {
+                    if (str.contains("execute_script")) {
+                        omg.add(str);
+                    }
+                }
+                if (omg.size()==0){
+                    return execute;
+                }
+                for (String str : omg) {
+                    String file = "";
+                    if (checkName(str.split(" ")[1])) {
                         try {
-                            builder.append(dispatcher.fileReader.inputCommandFile("resources/" + element[1])).append("\n");
-                        }catch (FileNotFoundException ex){
+                            file = dispatcher.fileReader.inputCommandFile("resources/" + str.split(" ")[1]);
+                        } catch (FileNotFoundException ex) {
                             try {
-                                builder.append(dispatcher.fileReader.inputCommandFile("resources/" + element[1] + ".txt")).append("\n");
-                            }catch (FileNotFoundException e) {
-                                System.out.println("Такого файла не уществует");
+                                file = dispatcher.fileReader.inputCommandFile("resources/" + str.split(" ")[1] + ".txt");
+                            } catch (FileNotFoundException e) {
+//                            System.out.println("Такого файла не уществует");
                             }
                         }
-                }else{
-                    builder.append(el).append("\n");
+                        execute = execute.replace(str, file);
+                    } else {
+                        execute = execute.replace(str, "");
+                    }
                 }
             }
         }
-        return String.valueOf(builder);
+        return execute;
     }
 
     private boolean checkName(String nameFile) {
