@@ -33,7 +33,9 @@ public class App {
             }catch (ConnectException ex){
                 ui.print("Server disconnect");
             }catch (EOFException ignored){
-                System.out.println("-");
+            }catch (NullPointerException ex){
+                flag = false;
+                break;
             }
 
         }
