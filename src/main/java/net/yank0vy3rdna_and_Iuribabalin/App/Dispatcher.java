@@ -10,6 +10,7 @@ import net.yank0vy3rdna_and_Iuribabalin.MakeObject.ObjectExecute;
 import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class Dispatcher {
@@ -75,9 +76,6 @@ public class Dispatcher {
             }
             else{
                 outBytes = serialCommand.serializable(out);
-                sizeBytes = ByteBuffer.allocate(4).putInt(outBytes.length).array();
-
-                oos.write(sizeBytes);
                 oos.write(outBytes);
                 oos.flush();
             }
@@ -87,7 +85,12 @@ public class Dispatcher {
             return "Client off work";
         }
 
-        String asw = ois.readUTF();
+        while (ois.available()==0){}
+
+        InputStream inputStream = socket.getInputStream();
+        byte[] bytes = new byte[ois.available()];
+        inputStream.read(bytes, 0, ois.available());
+        String asw = new String(bytes, StandardCharsets.UTF_8);
 
         for(String s: asw.split("\n")){
             if(s.trim().equals("Работа в консоли закончена")){
